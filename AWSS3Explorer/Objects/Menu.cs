@@ -62,6 +62,7 @@ namespace CargaToctocBundles.Objetos
             Console.WriteLine(".: AWSS3Explorer :.");
             Console.WriteLine();
             Console.WriteLine("Select DynamoDB option:");
+            Console.WriteLine("1 Export SqlServer to DynamoDB");
             Console.WriteLine("0. Exit");
 
             try

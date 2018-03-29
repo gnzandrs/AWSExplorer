@@ -28,10 +28,9 @@ namespace AWSS3Explorer
                     do
                     {
                         userOption = Menu.DisplayMainMenu();
-                        var client = AmazonClient.Conexion(profile.GetName());
+                        var s3Client = AmazonClient.S3Conexion(profile.GetName());
+                        var dynamoClient = AmazonClient.DynamoConexion(profile.GetName());
 
-                        using (client)
-                        {
                             switch (userOption)
                             {
                                 case -1:
@@ -40,16 +39,28 @@ namespace AWSS3Explorer
                                     Environment.Exit(0);
                                     break;
                                 case 1:
-                                    var profileController = new ProfileController(profile, client);
-                                    profileController.Run();
+                                    using (s3Client)
+                                    {
+                                        var profileController = new ProfileController(profile, s3Client);
+                                        profileController.Run();
+                                    }
                                     break;
                                 case 2:
                                     userOption = Menu.DisplayS3Menu();
-                                    var userController = new S3Controller(userOption, client);
-                                    userController.Run();
+
+                                    using (s3Client)
+                                    {
+                                        var userController = new S3Controller(userOption, s3Client);
+                                        userController.Run();
+                                    }
+
+                                    break;
+                                case 3:
+                                    userOption = Menu.DisplayDynamoMenu();
+                                    var dynamoController = new DynamoController(userOption, dynamoClient);
+                                    dynamoController.Run();
                                     break;
                             }
-                        }
 
                         Console.WriteLine("Press M to get back to main menu.");
                         resp = Console.ReadLine();
