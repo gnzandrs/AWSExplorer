@@ -61,6 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\AmazonClient.cs" />
+    <Compile Include="Objects\DynamoController.cs" />
+    <Compile Include="Objects\ProfileController.cs" />
+    <Compile Include="Objects\S3Controller.cs" />
     <Compile Include="Objects\Profile.cs" />
     <Compile Include="Objects\DeleteObject.cs" />
     <Compile Include="Objects\ListObjects.cs" />
