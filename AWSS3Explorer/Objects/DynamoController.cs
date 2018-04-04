@@ -60,10 +60,10 @@ namespace AWSS3Explorer.Objects
             Console.WriteLine("PrimaryKey from Destiny Table: ");
             destinyPk = Console.ReadLine();
 
-            if (String.IsNullOrEmpty(sourceTable)
-                && String.IsNullOrEmpty(sourcePk)
-                && String.IsNullOrEmpty(destinyTable)
-                && String.IsNullOrEmpty(destinyPk))
+            if (!String.IsNullOrEmpty(sourceTable)
+                && !String.IsNullOrEmpty(sourcePk)
+                && !String.IsNullOrEmpty(destinyTable)
+                && !String.IsNullOrEmpty(destinyPk))
             {
                 Console.WriteLine("Reading Source Data");
                 SqlConnection conn = new SqlConnection(connectionConfig);
