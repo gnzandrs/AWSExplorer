@@ -60,7 +60,12 @@ namespace AWSS3Explorer
                                     var dynamoController = new DynamoController(userOption, dynamoClient);
                                     dynamoController.Run();
                                     break;
-                            }
+                                case 4:
+                                    userOption = Menu.DisplayGenerateMenu();
+                                    var generateController = new GenerateController(userOption);
+                                    generateController.Run();
+                                    break;
+                        }
 
                         Console.WriteLine("Press M to get back to main menu.");
                         resp = Console.ReadLine();
