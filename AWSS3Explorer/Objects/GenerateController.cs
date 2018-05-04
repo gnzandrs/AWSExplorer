@@ -13,7 +13,7 @@ namespace AWSS3Explorer.Objects
     class GenerateController
     {
         static string connectionConfig => ConfigurationManager.ConnectionStrings["SqlServerConnection"].ConnectionString;
-        static string JsonDirectoryPath => ConfigurationManager.ConnectionStrings["JsonDirectoryPath"].ConnectionString;
+        static string JsonDirectoryPath => ConfigurationManager.AppSettings["JsonDirectoryPath"];
         int option = 0;
         string sourceTable = String.Empty;
         int recordsAmount = 0;
@@ -97,7 +97,7 @@ namespace AWSS3Explorer.Objects
 
                         // create and write file
                         string fileName = prefixFileName + "_" + i + "_" + currentDate + ".json";
-                        string path = @JsonDirectoryPath + fileName;
+                        string path = JsonDirectoryPath + fileName;
 
                         if (!File.Exists(path))
                         {
@@ -114,10 +114,30 @@ namespace AWSS3Explorer.Objects
 
                             int lastLine = dtFile.Rows.Count;
                             int actualLine = 1;
+                            int totalRows = dtFile.Rows.Count;
+
+                            string[] columnNames = dtFile.Columns.Cast<DataColumn>()
+                             .Select(x => x.ColumnName)
+                             .ToArray();
+                            string idColumnName = findIdColumnName(dt, columnNames);
+                            string jsonBodyStructure = generateJsonBodyStructure(dt, columnNames);
+
 
                             foreach (DataRow dr in dtFile.Rows)
                             {
-                                json = "";
+                                json = "{'type':'add','id':'" + idColumnName + "','fields':";
+
+                                string jsonBodyEdit = jsonBodyStructure;
+
+                                // replace data in structure
+                                foreach (string columnName in columnNames)
+                                {
+                                    string rowData = dr[columnName].ToString();
+                                    jsonBodyEdit = jsonBodyEdit.Replace("<" + columnName.ToLower() + ">", rowData);
+                                }
+
+                                json += json + jsonBodyEdit;
+                                json += "}";
 
                                 if (actualLine < dtFile.Rows.Count)
                                 {
@@ -141,13 +161,45 @@ namespace AWSS3Explorer.Objects
             }
         }
 
+        public string findIdColumnName(DataTable dt, string[] columnNames)
+        {
+            string idColumnName = String.Empty;
+
+            foreach (string columnName in columnNames)
+            {
+                if (columnName.ToLower().IndexOf("id") != -1)
+                {
+                    idColumnName = columnName;
+                    break;
+                }
+            }
+
+            return idColumnName;
+        }
+
+        public string generateJsonBodyStructure(DataTable data, string[] columnNames)
+        {
+            int totalRows = data.Rows.Count;
+            string jsonBodyStructure = "{";
+            int rowCount = 0;
+
+            foreach (string columnName in columnNames)
+            {
+                jsonBodyStructure += "'" + columnName.ToLower() + "':'<" + columnName.ToLower() + ">'";
+                rowCount++;
+                if (rowCount < totalRows)
+                    jsonBodyStructure += ",";
+            }
+            jsonBodyStructure += "}";
+
+            return jsonBodyStructure;
+        }
+
         public DataTable ExtractData()
         {
             string amount = (recordsToExtract == 0 ? "*" : recordsToExtract.ToString());
             SqlConnection conn = new SqlConnection(connectionConfig);
-
             string query = (recordsToExtract > 0 ? "SELECT top " + amount + " * FROM " + this.sourceTable : "SELECT * FROM " + this.sourceTable);
-
             SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
             DataSet ds = new DataSet();
             adapter.Fill(ds);
