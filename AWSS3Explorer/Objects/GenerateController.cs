@@ -13,13 +13,41 @@ namespace AWSS3Explorer.Objects
     class GenerateController
     {
         static string connectionConfig => ConfigurationManager.ConnectionStrings["SqlServerConnection"].ConnectionString;
+        static string JsonDirectoryPath => ConfigurationManager.ConnectionStrings["JsonDirectoryPath"].ConnectionString;
         int option = 0;
-        string sourceTable = "TableName";
+        string sourceTable = String.Empty;
         int recordsAmount = 0;
+        int recordsToExtract = 0;
 
         public GenerateController(int option)
         {
             this.option = option;
+        }
+
+        public int CheckForInt(string value)
+        {
+            bool check = false;
+            int valueConvert = 0;
+
+            try
+            {   
+                while (!check)
+                {
+                    check = int.TryParse(value, out valueConvert);
+
+                    if (!check)
+                    {
+                        Console.Write("Not a valid number, please try again: ");
+                        value = Console.ReadLine();
+                    }
+                }
+
+                return valueConvert;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
 
         public void Run()
@@ -28,6 +56,11 @@ namespace AWSS3Explorer.Objects
             {
                 try
                 {
+                    Console.Write("Write the source table name: ");
+                    sourceTable = Console.ReadLine();
+                    Console.Write("Amount of records to extract (0 = all): ");
+                    recordsToExtract = CheckForInt(Console.ReadLine());
+
                     Console.WriteLine("Extracting data from SQL Server");
                     DataTable dt = ExtractData();
 
@@ -40,7 +73,7 @@ namespace AWSS3Explorer.Objects
                     string currentDate = DateTime.Now.ToString("yyyyMMdd");
                     string prefixFileName = String.Empty;
                     Console.WriteLine("Total of files to create: " + filesToCreate);
-                    Console.WriteLine("Write a File Name: ");
+                    Console.Write("Write a file name: ");
                     prefixFileName = Console.ReadLine();
 
                     for (int i = 1; i <= filesToCreate; i++)
@@ -64,7 +97,7 @@ namespace AWSS3Explorer.Objects
 
                         // create and write file
                         string fileName = prefixFileName + "_" + i + "_" + currentDate + ".json";
-                        string path = @"E:\data\" + fileName;
+                        string path = @JsonDirectoryPath + fileName;
 
                         if (!File.Exists(path))
                         {
@@ -84,8 +117,7 @@ namespace AWSS3Explorer.Objects
 
                             foreach (DataRow dr in dtFile.Rows)
                             {
-                                json = "{\"type\":\"add\",\"id\":\"" + dr["IdOfTable"] + "\",\"fields\":{\"IdOfTable\":\"" 
-                                    + dr["IdOfTable"] + "\",\"ExampleField\":\"" + dr["ExampleField"] + "\"}}";
+                                json = "";
 
                                 if (actualLine < dtFile.Rows.Count)
                                 {
@@ -109,16 +141,14 @@ namespace AWSS3Explorer.Objects
             }
         }
 
-        public string CreateFile()
-        {
-            return String.Empty;
-        }
-
         public DataTable ExtractData()
         {
-            Console.WriteLine("Reading Source Data");
+            string amount = (recordsToExtract == 0 ? "*" : recordsToExtract.ToString());
             SqlConnection conn = new SqlConnection(connectionConfig);
-            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + this.sourceTable, conn);
+
+            string query = (recordsToExtract > 0 ? "SELECT top " + amount + " * FROM " + this.sourceTable : "SELECT * FROM " + this.sourceTable);
+
+            SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
             DataSet ds = new DataSet();
             adapter.Fill(ds);
             DataTable dt = ds.Tables[0];
