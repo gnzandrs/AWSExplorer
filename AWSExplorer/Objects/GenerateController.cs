@@ -50,6 +50,32 @@ namespace AWSS3Explorer.Objects
             }
         }
 
+        public string CheckForString(string value)
+        {
+            bool check = false;
+            string valueConvert = String.Empty;
+
+            try
+            {
+                while (!check)
+                {
+                    check = (value == String.Empty ? false : true);
+
+                    if (!check)
+                    {
+                        Console.Write("Not a valid value, please try again: ");
+                        value = Console.ReadLine();
+                    }
+                }
+
+                return valueConvert;
+            }
+            catch (Exception)
+            {
+                return String.Empty;
+            }
+        }
+
         public void Run()
         {
             if (option == 1)
@@ -57,7 +83,7 @@ namespace AWSS3Explorer.Objects
                 try
                 {
                     Console.Write("Write the source table name: ");
-                    sourceTable = Console.ReadLine();
+                    sourceTable = CheckForString(Console.ReadLine());
                     Console.Write("Amount of records to extract (0 = all): ");
                     recordsToExtract = CheckForInt(Console.ReadLine());
 
