@@ -53,12 +53,12 @@ namespace AWSS3Explorer.Objects
         public string CheckForString(string value)
         {
             bool check = false;
-            string valueConvert = String.Empty;
 
             try
             {
                 while (!check)
                 {
+                    value = value.Trim();
                     check = (value == String.Empty ? false : true);
 
                     if (!check)
@@ -68,11 +68,37 @@ namespace AWSS3Explorer.Objects
                     }
                 }
 
-                return valueConvert;
+                return value;
             }
             catch (Exception)
             {
                 return String.Empty;
+            }
+        }
+
+        public bool CheckIfTableExist(string tableName)
+        {
+            try
+            {
+                bool exists = true;
+                SqlConnection conn = new SqlConnection(connectionConfig);
+                string query = "SELECT count(*) as Exist from INFORMATION_SCHEMA.TABLES where table_name = '" + tableName + "'";
+                SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+                DataTable dt = ds.Tables[0];
+
+                if (dt.Rows[0]["Exist"].ToString() != "1")
+                {
+                    Console.WriteLine("Table does not exist!");
+                    exists = false;
+                }
+
+                return exists;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
@@ -84,6 +110,11 @@ namespace AWSS3Explorer.Objects
                 {
                     Console.Write("Write the source table name: ");
                     sourceTable = CheckForString(Console.ReadLine());
+                    bool tableExists = CheckIfTableExist(sourceTable);
+
+                    if (!tableExists)
+                        return;
+
                     Console.Write("Amount of records to extract (0 = all): ");
                     recordsToExtract = CheckForInt(Console.ReadLine());
 
