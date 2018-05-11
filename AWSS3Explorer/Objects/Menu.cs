@@ -10,8 +10,8 @@ namespace CargaToctocBundles.Objetos
         public static int DisplayMainMenu()
         {
             Console.Clear();
-            Console.Title = ".: AWSS3Explorer :.";
-            Console.WriteLine(".: AWSS3Explorer :.");
+            Console.Title = ".: AWSExplorer :.";
+            Console.WriteLine(".: AWSExplorer :.");
             Console.WriteLine();
             Console.WriteLine("Select option:");
             Console.WriteLine("1. Create a profile file.");
@@ -35,8 +35,8 @@ namespace CargaToctocBundles.Objetos
         public static int DisplayS3Menu()
         {
             Console.Clear();
-            Console.Title = ".: AWSS3Explorer :.";
-            Console.WriteLine(".: AWSS3Explorer :.");
+            Console.Title = ".: AWSExplorer :.";
+            Console.WriteLine(".: AWSExplorer :.");
             Console.WriteLine();
             Console.WriteLine("Select S3 option:");
             Console.WriteLine("1. List objects.");
@@ -59,8 +59,8 @@ namespace CargaToctocBundles.Objetos
         public static int DisplayDynamoMenu()
         {
             Console.Clear();
-            Console.Title = ".: AWSS3Explorer :.";
-            Console.WriteLine(".: AWSS3Explorer :.");
+            Console.Title = ".: AWSExplorer :.";
+            Console.WriteLine(".: AWSExplorer :.");
             Console.WriteLine();
             Console.WriteLine("Select DynamoDB option:");
             Console.WriteLine("1 Export SqlServer to DynamoDB");
@@ -81,8 +81,8 @@ namespace CargaToctocBundles.Objetos
         public static int DisplayGenerateMenu()
         {
             Console.Clear();
-            Console.Title = ".: AWSS3Explorer :.";
-            Console.WriteLine(".: AWSS3Explorer :.");
+            Console.Title = ".: AWSExplorer :.";
+            Console.WriteLine(".: AWSExplorer :.");
             Console.WriteLine();
             Console.WriteLine("Select the option:");
             Console.WriteLine("1 Export Table Data as JSON");
