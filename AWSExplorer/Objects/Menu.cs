@@ -18,6 +18,7 @@ namespace CargaToctocBundles.Objetos
             Console.WriteLine("2. S3.");
             Console.WriteLine("3. DynamoDB.");
             Console.WriteLine("4. Data Generation.");
+            Console.WriteLine("5. Log Configuration.");
             Console.WriteLine("0. Exit");
 
             try
@@ -87,6 +88,28 @@ namespace CargaToctocBundles.Objetos
             Console.WriteLine("Select the option:");
             Console.WriteLine("1 Export Table Data as JSON");
             Console.WriteLine("0. Exit");
+
+            try
+            {
+                string response = Console.ReadLine();
+                return int.Parse(response);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("No valid option!");
+                return -1;
+            }
+        }
+
+        public static int DisplayLogMenu()
+        {
+            Console.Clear();
+            Console.Title = ".: AWSExplorer :.";
+            Console.WriteLine(".: AWSExplorer :.");
+            Console.WriteLine();
+            Console.WriteLine("Select the option:");
+            Console.WriteLine("1. Show");
+            Console.WriteLine("2. Change");
 
             try
             {

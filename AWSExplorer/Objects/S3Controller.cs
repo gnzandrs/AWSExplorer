@@ -46,10 +46,12 @@ namespace AWSS3Explorer.Objects
                 bucketName = Console.ReadLine();
                 Console.Write("File to upload: ");
                 string keyName = Console.ReadLine();
-                Console.Write("Path of the file: ");
-                string filePath = Console.ReadLine();
+                Console.Write("Local path of the file: ");
+                string fileLocalPath = Console.ReadLine();
+                Console.Write("Remote path of the file (enter for none): ");
+                string fileRemotePath = Console.ReadLine();
                 UploadObject uploadObject =
-                    new UploadObject(client, bucketName, keyName, filePath);
+                    new UploadObject(client, bucketName, keyName, fileLocalPath, fileRemotePath);
                 bool uploadStatus = uploadObject.Upload();
 
                 if (uploadStatus)

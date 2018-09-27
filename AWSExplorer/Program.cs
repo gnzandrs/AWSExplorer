@@ -65,6 +65,12 @@ namespace AWSS3Explorer
                                     var generateController = new GenerateController(userOption);
                                     generateController.Run();
                                     break;
+                                case 5:
+                                    userOption = Menu.DisplayLogMenu();
+                                    var logController = new LogController(userOption);
+                                    logController.Run();
+                                    break;
+
                         }
 
                         Console.WriteLine("Press M to get back to main menu.");
